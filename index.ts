@@ -122,7 +122,7 @@ async function getPachcaThread(webhookEvent: WebhookEvent) {
   const content = await (async () => {
     const statusText = await (async () => {
       if (pullRequest.merged) {
-        return `🎉 Смержен @${pullRequest.merged_by?.login}`
+        return `✅ Смержен @${pullRequest.merged_by?.login}`
       }
       if (pullRequest.closed_at) return '❌ Закрыт'
       if (pullRequest.state === 'closed') return '🤔 Закрыт?'
@@ -196,7 +196,7 @@ async function getPachcaThread(webhookEvent: WebhookEvent) {
       return '🔴 Unknown'
     })()
 
-    return `${pullRequest.title} [(#${pullRequest.number})](https://app.graphite.dev/github/pr/pachca/web/${pullRequest.number})
+    return `**Pull Request:** ${GITHUB_CONSTANTS.repo}\n${pullRequest.title} [(#${pullRequest.number})](https://github.com/${GITHUB_CONSTANTS.owner}/${GITHUB_CONSTANTS.repo}/pull/${pullRequest.number})
   ↳ **Автор:** @${pullRequest.user.login}
   ↳ **Статус:** ${statusText}`
   })()
@@ -230,7 +230,6 @@ async function getPachcaThread(webhookEvent: WebhookEvent) {
         .json<{ data: { id: number; thread: null | { id: number; chat_id: number } } }>()
     }
   })()
-
   if (!pachcaCommentInGithub) {
     await octokit.rest.issues.createComment({
       owner: GITHUB_CONSTANTS.owner,
@@ -259,7 +258,7 @@ async function getThreadNotificationMessage(webhookEvent: WebhookEvent) {
 
     if (webhookEvent.action === 'closed') {
       if (webhookEvent.pull_request.merged) {
-        return `🎉 @${webhookEvent.sender.login} смержилPR`
+        return `✅ @${webhookEvent.sender.login} смержил PR`
       }
       return `🙅‍♂️ @${webhookEvent.sender.login} закрыл PR`
     }
